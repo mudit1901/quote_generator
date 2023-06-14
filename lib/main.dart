@@ -35,13 +35,14 @@ class _MyHomePageState extends State<MyHomePage> {
   String quote = '';
   String author = '';
   bool favourite = false;
-
+//API CALLING
   @override
   void initState() {
     super.initState();
     _quote = QuoteService.getRandomQuote();
   }
 
+//Toogle Function for Favourite Button
   void toggleFavorite() {
     setState(() {
       favourite = !favourite;
@@ -74,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.orange),
                 )),
               ),
+              //Future Builder
               FutureBuilder(
                 future: _quote,
                 builder: (context, snapshot) {
@@ -115,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
+                                //Refresh Button
                                 InkWell(
                                   child: const Icon(Icons.refresh_rounded),
                                   onTap: () {
@@ -123,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     });
                                   },
                                 ),
+                                //Copy Button
                                 InkWell(
                                   child: const Icon(Icons.copy),
                                   onTap: () {
@@ -141,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     });
                                   },
                                 ),
+                                //Favourite Button
                                 GestureDetector(
                                   onDoubleTap: toggleFavorite,
                                   child: Icon(
