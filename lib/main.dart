@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quotes/quote.dart';
 import 'package:quotes/service.dart';
 
@@ -32,11 +33,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late Future<Quote> _quote;
+  String quote = '';
+  String author = '';
+  bool favourite = false;
 
   @override
   void initState() {
     super.initState();
     _quote = QuoteService.getRandomQuote();
+  }
+
+  void toggleFavorite() {
+    setState(() {
+      favourite = !favourite;
+    });
   }
 
   @override
@@ -101,15 +111,47 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
-                            InkWell(
-                              child: Icon(Icons.refresh_rounded),
-                              onTap: () {
-                                setState(() {
-                                  _quote = QuoteService.getRandomQuote();
-                                });
-                              },
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                InkWell(
+                                  child: const Icon(Icons.refresh_rounded),
+                                  onTap: () {
+                                    setState(() {
+                                      _quote = QuoteService.getRandomQuote();
+                                    });
+                                  },
+                                ),
+                                InkWell(
+                                  child: const Icon(Icons.copy),
+                                  onTap: () {
+                                    setState(() {
+                                      Clipboard.setData(ClipboardData(
+                                              text: snapshot.data!.text))
+                                          .then((value) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                              'Quote Copied Successfully!!!'),
+                                          backgroundColor:
+                                              Color.fromARGB(255, 8, 71, 10),
+                                        ));
+                                      });
+                                    });
+                                  },
+                                ),
+                                GestureDetector(
+                                  onDoubleTap: toggleFavorite,
+                                  child: Icon(
+                                    favourite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: favourite ? Colors.red : null,
+                                  ),
+                                )
+                              ],
                             ),
                           ],
                         ),
